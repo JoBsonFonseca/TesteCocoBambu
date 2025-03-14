@@ -1,0 +1,188 @@
+{
+	"info": {
+		"_postman_id": "6be62a07-b5e7-456d-ba08-305da243eaa1",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32042758"
+	},
+	"item": [
+		{
+			"name": "https://api-cupdeschom.cocobambu.com/api/v3.1/ordercart/\n",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Verifica se a API retornou status 200\r",
+							"pm.test(\"Status code é 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Converte a resposta para JSON\r",
+							"let jsonData = pm.response.json();\r",
+							"\r",
+							"// Verifica se o carrinho contém pelo menos um item\r",
+							"pm.test(\"O carrinho contém itens\", function () {\r",
+							"    pm.expect(jsonData.items).to.be.an('array').that.is.not.empty;\r",
+							"});\r",
+							"\r",
+							"// Valida se a quantidade do item no carrinho corresponde à enviada na requisição\r",
+							"pm.test(\"A quantidade do item está correta\", function () {\r",
+							"    let item = jsonData.items.find(i => i.id === \"4e756321-682d-44e7-9ffc-d82c57751a25\");\r",
+							"    pm.expect(item.quantity).to.equal(1);\r",
+							"});\r",
+							"\r",
+							"// Valida se o subtotal foi calculado corretamente\r",
+							"pm.test(\"O subtotal está correto\", function () {\r",
+							"    let expectedTotal = jsonData.items.reduce((acc, item) => acc + item.total, 0);\r",
+							"    pm.expect(jsonData.subtotal).to.equal(expectedTotal);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer U6nSFNzzFeGhKD0PQUtIILPTh52AWC",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"id\": \"4e756321-682d-44e7-9ffc-d82c57751a25\",\r\n      \"quantity\": 1\r\n    }\r\n  ],\r\n  \"store\": {\r\n    \"id\": 126\r\n  },\r\n  \"is_takeout\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api-cupdeschom.cocobambu.com/api/v3.1/ordercart/\n",
+					"protocol": "https",
+					"host": [
+						"api-cupdeschom",
+						"cocobambu",
+						"com"
+					],
+					"path": [
+						"api",
+						"v3.1",
+						"ordercart",
+						"\n"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://api-cupdeschom.cocobambu.com/api/v3.1/ordercart/\n",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Verifica se a API retornou status 200\r",
+							"pm.test(\"Status code é 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Converte a resposta para JSON\r",
+							"let jsonData = pm.response.json();\r",
+							"\r",
+							"// Verifica se o carrinho contém pelo menos um item\r",
+							"pm.test(\"O carrinho contém itens\", function () {\r",
+							"    pm.expect(jsonData.items).to.be.an('array').that.is.not.empty;\r",
+							"});\r",
+							"\r",
+							"// Valida se a quantidade do item foi atualizada corretamente\r",
+							"pm.test(\"A quantidade do item foi atualizada\", function () {\r",
+							"    let item = jsonData.items.find(i => i.id === \"4e756321-682d-44e7-9ffc-d82c57751a25\");\r",
+							"    pm.expect(item.quantity).to.equal(2); // Verifica se a quantidade foi alterada para 2\r",
+							"});\r",
+							"\r",
+							"// Valida se o subtotal foi recalculado corretamente\r",
+							"pm.test(\"O subtotal foi atualizado corretamente\", function () {\r",
+							"    let expectedTotal = jsonData.items.reduce((acc, item) => acc + item.total, 0);\r",
+							"    pm.expect(jsonData.subtotal).to.equal(expectedTotal); // Verifica se o subtotal é correto\r",
+							"});\r",
+							"\r",
+							"// Verifica se o valor total também foi recalculado corretamente\r",
+							"pm.test(\"O valor total foi recalculado corretamente\", function () {\r",
+							"    let expectedTotalWithTip = jsonData.subtotal + jsonData.tip.applied;\r",
+							"    pm.expect(jsonData.total).to.equal(expectedTotalWithTip); // Verifica se o valor total é correto\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer U6nSFNzzFeGhKD0PQUtIILPTh52AWC",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"id\": \"4e756321-682d-44e7-9ffc-d82c57751a25\",\r\n      \"quantity\": 2\r\n    }\r\n  ],\r\n  \"store\": {\r\n    \"id\": 126\r\n  },\r\n  \"is_takeout\": false\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api-cupdeschom.cocobambu.com/api/v3.1/ordercart/\n",
+					"protocol": "https",
+					"host": [
+						"api-cupdeschom",
+						"cocobambu",
+						"com"
+					],
+					"path": [
+						"api",
+						"v3.1",
+						"ordercart",
+						"\n"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
